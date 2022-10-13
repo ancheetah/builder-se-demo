@@ -13,6 +13,7 @@ import Link from 'next/link'
 import { Themed } from '@theme-ui/mdx'
 import { getLayoutProps } from '@lib/get-layout-props'
 import DefaultErrorPage from 'next/error'
+import '../components/LocalizedComponent'
 
 builder.init(builderConfig.apiKey)
 
@@ -21,7 +22,10 @@ export async function getStaticProps({
   locale,
 }: GetStaticPropsContext<{ path: string[] }>) {
   const page = await resolveBuilderContent('page', {
-    locale,
+    // locale,
+    options: { // set locale at build time
+      locale 
+    },
     urlPath: '/' + (params?.path?.join('/') || ''),
   })
   return {
@@ -90,6 +94,7 @@ export default function Path({
         model="page"
         data={{ theme }}
         content={page}
+        locale={locale} // resolve locale client side when rendering content
         renderLink={(props: any) => {
           // nextjs link doesn't handle hash links well if it's on the same page (starts with #)
           if (props.target === '_blank' || props.href?.startsWith('#')) {
