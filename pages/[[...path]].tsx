@@ -7,7 +7,6 @@ import { NextSeo } from 'next-seo'
 import { useRouter } from 'next/router'
 import { BuilderComponent, builder, useIsPreviewing } from '@builder.io/react'
 import builderConfig from '@config/builder'
-import { resolveBuilderContent } from '@lib/resolve-builder-content'
 import { useThemeUI } from '@theme-ui/core'
 import Link from 'next/link'
 import { Themed } from '@theme-ui/mdx'
@@ -21,13 +20,19 @@ export async function getStaticProps({
   params,
   locale,
 }: GetStaticPropsContext<{ path: string[] }>) {
-  const page = await resolveBuilderContent('page', {
+  const page = (await builder.get('page', {
     // locale,
     options: { // set locale at build time
-      locale 
+      locale,
+      cachebust: true,
+      includeRefs: true, 
     },
-    urlPath: '/' + (params?.path?.join('/') || ''),
+    userAttributes: {
+      locale,
+    },
+    url: '/' + (params?.path?.join('/') || ''),
   })
+  .toPromise()) || null;
   return {
     props: {
       page,
