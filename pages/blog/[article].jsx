@@ -26,7 +26,7 @@ import {
     return (
       <BuilderContent
         content={article}
-        options={{ includeRefs: true }}
+        options={{ includeRefs: true, cachebust: true }}
         model="blog-article"
       >
         {(data, loading, fullContent) => (
@@ -59,7 +59,7 @@ import {
               <BuilderComponent
                 name="blog-article"
                 content={fullContent}
-                options={{ includeRefs: true }}
+                options={{ includeRefs: true, cachebust: true }}
               />
             </React.Fragment>
           )
@@ -73,7 +73,7 @@ import {
       (await builder
         .get('blog-article', {
           // Include references, like our `author` ref
-          options: { includeRefs: true },
+          options: { includeRefs: true, cachebust: true },
           query: {
             // Get the specific article by handle
             'data.handle': params.handle,
