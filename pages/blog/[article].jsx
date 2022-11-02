@@ -89,10 +89,13 @@ import {
   }
   
   export async function getStaticPaths() {
+    const allPosts = await builder.getAll('blog-article', {
+      options: { noTargeting: true },
+    });
     return {
-      paths: [],
+      paths: allPosts?.map(post => `/blog/${post.data.handle}`) || [],
       fallback: true,
-    }
+    };
   }
   
   export default BlogArticle

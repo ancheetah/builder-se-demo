@@ -23,12 +23,10 @@ export async function getStaticProps({
   const page = (await builder.get('page', {
     // locale,
     options: { // set locale at build time
-      locale,
-      cachebust: true,
-      includeRefs: true, 
+      locale, 
     },
     userAttributes: {
-      locale,
+      locale, // target the right Builder content
     },
     url: '/' + (params?.path?.join('/') || ''),
   })
@@ -47,8 +45,13 @@ export async function getStaticProps({
 }
 
 export async function getStaticPaths({ locales }: GetStaticPathsContext) {
+  const pages = await builder.getAll('page', {
+    options: { noTargeting: true },
+    omit: 'data.blocks',
+  })
+
   return {
-    paths: [],
+    paths: pages.map((page) => `${page.data?.url}`),
     fallback: true,
   }
 }
